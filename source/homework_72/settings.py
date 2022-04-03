@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'quotes_api',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -112,6 +113,12 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+LOGOUT_REDIRECT_URL = 'quotes_api:______'
+LOGIN_REDIRECT_URL = 'quotes_api:______'
+
+
+LOGIN_URL = 'accounts:login'
 
 
 # Static files (CSS, JavaScript, Images)
