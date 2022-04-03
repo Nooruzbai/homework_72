@@ -14,7 +14,6 @@ class Quote(models.Model):
     ranking = models.IntegerField(default=0, verbose_name='Ranking')
     status = models.TextField(default=CHOICES[0], choices=CHOICES, null=False, blank=False, verbose_name='Status')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='DateTime')
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.CASCADE, related_name='quotes')
 
     def __str__(self):
         return f"{self.pk}. {self.name} {self.email}  {self.status} {self.date_created}"
