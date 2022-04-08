@@ -1,0 +1,110 @@
+[
+{
+  "model": "quotes_api.quote",
+  "pk": 1,
+  "fields": {
+    "text": "O tempora, o mores!",
+    "name": "Cicero",
+    "email": "Cicero@gmail.com",
+    "ranking": 5,
+    "status": "new",
+    "date_created": "2022-04-03T14:27:58.058Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 3,
+  "fields": {
+    "text": "I Love You!",
+    "name": "Nooruzbay",
+    "email": "nooruzbay@gmail.com",
+    "ranking": 11,
+    "status": "new",
+    "date_created": "2022-04-03T15:03:02.518Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 4,
+  "fields": {
+    "text": "To be, or not to be!",
+    "name": "Shakspeer",
+    "email": "shakspieer@gmail.com",
+    "ranking": 1,
+    "status": "new",
+    "date_created": "2022-04-03T15:28:39.670Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 5,
+  "fields": {
+    "text": "Veni, vidi, vici!",
+    "name": "Cesar",
+    "email": "cesar@gmail.com",
+    "ranking": 1,
+    "status": "moderated",
+    "date_created": "2022-04-03T15:47:32.578Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 6,
+  "fields": {
+    "text": "Just Do It",
+    "name": "Nike",
+    "email": "nike@gmail.com",
+    "ranking": 1,
+    "status": "moderated",
+    "date_created": "2022-04-03T16:00:49.368Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 7,
+  "fields": {
+    "text": "Statistics, education",
+    "name": "Apple",
+    "email": "manager@a.com",
+    "ranking": 5,
+    "status": "new",
+    "date_created": "2022-04-05T11:11:11.651Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 8,
+  "fields": {
+    "text": "Hive",
+    "name": "Hive",
+    "email": "hive@gmail.com",
+    "ranking": 0,
+    "status": "new",
+    "date_created": "2022-04-06T02:45:41.042Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 9,
+  "fields": {
+    "text": "Hile Gydra!",
+    "name": "Gydra",
+    "email": "gydra@gmail.com",
+    "ranking": 0,
+    "status": "new",
+    "date_created": "2022-04-06T03:18:00.445Z"
+  }
+},
+{
+  "model": "quotes_api.quote",
+  "pk": 13,
+  "fields": {
+    "text": "Viva la Vida",
+    "name": "Orange",
+    "email": "nooruzbay@gmail.com",
+    "ranking": -2,
+    "status": "new",
+    "date_created": "2022-04-07T08:37:27.954Z"
+  }
+}
+]
