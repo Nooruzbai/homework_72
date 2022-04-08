@@ -21,3 +21,8 @@ class QuoteUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = Quote
         fields = ('text', 'status', )
+
+
+class RankingSerializer(serializers.ModelSerializer):
+    class Meta:
+        fields = ('ranking',)

@@ -1,16 +1,29 @@
 from http import HTTPStatus
 
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse, HttpResponseNotAllowed
 from django.shortcuts import render, get_object_or_404
+from django.views.decorators.csrf import ensure_csrf_cookie
+from django.views.generic import TemplateView
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import ValidationError
-from rest_framework.permissions import SAFE_METHODS, IsAuthenticated
+from rest_framework.permissions import SAFE_METHODS, IsAuthenticated, DjangoModelPermissions, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 
 from quotes_api.models import Quote
-from quotes_api.serializers import QuoteSerializer, QuoteUpdateSerializer, QuoteCreateSerializer
+from quotes_api.serializers import QuoteSerializer, QuoteUpdateSerializer, QuoteCreateSerializer, RankingSerializer
+
+
+@ensure_csrf_cookie
+def get_csrf_token(request):
+    if request.method == "GET":
+        return HttpResponse()
+    return HttpResponseNotAllowed(['GET'])
+
+
+class IndexView(TemplateView):
+    template_name = "index.html"
 
 
 class LogoutView(APIView):
@@ -26,13 +39,17 @@ class QuoteListCreateView(APIView):
 
     def get(self, request, *args, **kwargs):
         serializer_class = QuoteSerializer
-        quotes = Quote.objects.all()
-        serializer = serializer_class(quotes, many=True)
-        return Response(serializer.data)
+        if self.request.user.has_perm('view_quote'):
+            quotes = Quote.objects.all()
+            serializer = serializer_class(quotes, many=True)
+            return Response(serializer.data)
+        else:
+            quotes = Quote.objects.all().filter(status='moderated')
+            serializer = serializer_class(quotes, many=True)
+            return Response(serializer.data)
 
     def post(self, request, *args, **kwargs):
         serializer_class = QuoteCreateSerializer
-        print(request.data)
         serializer = serializer_class(data=request.data)
 
         serializer.is_valid(raise_exception=True)
@@ -48,6 +65,11 @@ class QuoteListCreateView(APIView):
             print(exc)
             return JsonResponse(data={'error': "Something went wrong"}, status=HTTPStatus.INTERNAL_SERVER_ERROR)
         return super().handle_exception(exc)
+
+    def get_permissions(self):
+        if self.request.method == "POST":
+            return [AllowAny()]
+        return super().get_permissions()
 
 
 class QuoteEditView(APIView):
@@ -76,8 +98,71 @@ class QuoteEditView(APIView):
 
     def delete(self, request, *args, pk=None, **kwargs):
         serializer_class = QuoteSerializer
+        if self.request.user.has_perm('delete_quote'):
+            quote = get_object_or_404(Quote, pk=pk)
+            serializer = serializer_class(quote)
+            quote_ready = serializer.data['id']
+            quote.delete()
+            return Response({'pk': quote_ready})
+        else:
+            return Response({'Error': "You dont have rights."})
+
+
+# class RankingView(APIView):
+#
+#     def post(self, request, *args, pk=None, **kwargs):
+#         print(self.request.data)
+#         # Prihodit + libo - v zavisomosti ot knopki {'sign': '+'}
+#         sign = self.request.data.get("sign")
+#         quote_pk = pk
+#         session = request.session
+#         quote = get_object_or_404(Quote, pk=pk)
+#         try:
+#             if sign in session[quote_pk]['sign']:
+#                 return Response({'Error': "You cannot do this operation"})
+#         except KeyError as Error:
+#             session[quote_pk]['sign'] = sign
+#             if session[quote_pk]['sign'] == "+":
+#                 quote.ranking += 1
+#                 quote.save()
+#             if session[quote_pk]['sign'] == "-":
+#                 quote.ranking -= 1
+#                 quote.save()
+#             return Response({"status": "Successfully added"}, status=200)
+#
+
+
+class RankingView(APIView):
+
+    def post(self, request, *args, pk=None, **kwargs):
+        # Prihodit + libo - v zavisomosti ot knopki {'sign': '+'}
+        sign = self.request.data.get("sign")
+        quote_pk = str(pk)
+        session = request.session
         quote = get_object_or_404(Quote, pk=pk)
-        serializer = serializer_class(quote)
-        quote_ready = serializer.data['id']
-        quote.delete()
-        return Response({'pk': quote_ready})
+        if not session.get(quote_pk):
+            session[quote_pk] = sign
+            if session[quote_pk] == "+":
+                quote.ranking += 1
+                quote.save()
+                return Response({"not_error": "No Problem", "ranking": f"{quote.ranking}"}, status=200)
+            if session[quote_pk] == "-":
+                quote.ranking -= 1
+                quote.save()
+                return Response({"not_error": "No Problem", "ranking": f"{quote.ranking}"}, status=200)
+        else:
+            print(session[quote_pk])
+            print(sign)
+            if sign == session[quote_pk]:
+                return Response({"Error": "You cannot perform this aciton"}, status=400)
+            else:
+                if sign == "+":
+                    session[quote_pk] = sign
+                    quote.ranking += 1
+                    quote.save()
+                    return Response({"not_error": "No Problem", "ranking": f"{quote.ranking}"}, status=200)
+                if sign == "-":
+                    session[quote_pk] = sign
+                    quote.ranking -= 1
+                    quote.save()
+                    return Response({"not_error": "No Problem", "ranking": f"{quote.ranking}"}, status=200)

@@ -12,7 +12,7 @@ class Quote(models.Model):
     name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Name')
     email = models.EmailField(max_length=100, blank=False, null=False, verbose_name='Email')
     ranking = models.IntegerField(default=0, verbose_name='Ranking')
-    status = models.TextField(default=CHOICES[0], choices=CHOICES, null=False, blank=False, verbose_name='Status')
+    status = models.TextField(default=CHOICES[0][0], choices=CHOICES, null=False, blank=False, verbose_name='Status')
     date_created = models.DateTimeField(auto_now_add=True, verbose_name='DateTime')
 
     def __str__(self):

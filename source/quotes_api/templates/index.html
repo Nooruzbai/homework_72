@@ -16,7 +16,7 @@
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Images</a>
+            <a class="navbar-brand" id = "quotes_list">Quotes</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                     aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -24,6 +24,9 @@
 
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" id="add_quote_form">Add Quote</a>
+                    </li>
                     {% if not user.is_authenticated %}
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'accounts:login' %}">Login</a>
@@ -44,19 +47,37 @@
 </header>
 
 
-<div class="container">
-    {% block content %}
+{% block content %}
 
+<div class="container" id="container">
 
+<div class="container1" id="container1" hidden>
 
+    <div class="inputs">
+        <label for="text">Text:</label>
+        <input type="text" id="text" name="text"><br><br>
 
-    {% endblock %}
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email"><br><br>
+
+        <input type="submit" onclick="create_quote(event)" value="Create Quote" data-quote-url="{% url "quotes_api:article_list_create_view" %}"
+    </div>
+
 </div>
 
-  <script type="text/javascript" src="{% static 'js/index.js' %}">
+</div>
 
 
-  </script>
+{% endblock %}
+
+
+<script type="text/javascript" src="{% static 'js/index.js' %}">
+
+
+</script>
 
 
 </body>
